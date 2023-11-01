@@ -1,4 +1,3 @@
-`
 #!/bin/sh -l
 
 curl -s https://awake-api.herokuapp.com/awake/$1 | grep -q "true"
@@ -9,4 +8,3 @@ else
 echo "$1 is asleep :("
 exit 1
 fi
-`
