@@ -1,3 +1,4 @@
+name: label new contributor
 on:
     issues:
       types: [opened]
@@ -12,20 +13,32 @@ on:
     labeler:
       runs-on: ubuntu-latest
       steps:
-        - name: Checkout code
-          uses: actions/checkout@v2
-        - name: Install GitHub CLI
-          run: |
-            sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-            sudo apt-add-repository https://cli.github.com/packages
-            sudo apt update
-            sudo apt install gh
-        - name: Label issues or pull requests
-          if: ${{ github.event_name == 'issues' || github.event_name == 'pull_request_target' }}
-          run: |
-            if [[ "${{ github.event.issue }}" != "" ]]; then
-              echo "Labeling issue"
-              gh issue add-label "${{ github.event.issue.number }}" "new contributor"
-            elif [[ "${{ github.event.pull_request }}" != "" ]]; then
-              echo "Labeling pull request"
-              gh pr add-label "${{ github.event.pull_request.number }}" "new contributor"
+        - name: Labeler
+          uses: actions/github-script@v6
+          with: 
+            script: |
+            const eventType = context.eventName;
+            // Get a list of all issues created by the PR opener
+            // See: https://octokit.github.io/rest.js/#pagination
+            const creator = context.payload.sender.login
+            const opts = github.rest.issues.listForRepo.endpoint.merge({
+                ...context.issue,
+                creator,
+                state: 'all'
+            })
+            const issues = await github.paginate(opts)
+
+            for (const issue of issues) {
+                if (issue.number === context.issue.number) {
+                continue
+                }
+
+                if (issue.pull_request || issue.user.login === creator) {
+                return // Creator is already a contributor.
+                } }
+            await github.rest.issues.addLabels({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels:["new contributor"]
+            });
