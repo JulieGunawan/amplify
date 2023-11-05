@@ -10,12 +10,12 @@
 
 <script>
 export default {
-  name: 'LogoutButton',
+  name: "LogoutButton",
   methods: {
     logout() {
-      this.$auth.logout()
-      this.$router.push({ path: '/' })
-    }
-  }
-}
+      this.$auth.logout();
+      this.$router.push({ path: "/" });
+    },
+  },
+};
 </script>

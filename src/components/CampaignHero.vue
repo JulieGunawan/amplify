@@ -7,8 +7,8 @@
       :style="{
         'background-color': `rgba(${hexToRgba(
           lightTheme['primary-alt'],
-          0.95
-        )})`
+          0.95,
+        )})`,
       }"
       class="call-to-action"
     >
@@ -30,7 +30,7 @@
           color="secondary"
           :to="{
             name: 'Campaign',
-            params: { campaignId: campaign.id || 'undefined' }
+            params: { campaignId: campaign.id || 'undefined' },
           }"
         >
           Write Your Representatives
@@ -41,42 +41,42 @@
 </template>
 
 <script>
-import { lightTheme } from '@/configs/theme.js'
-import campaignData from '@/assets/scm/text/text.json'
+import { lightTheme } from "@/configs/theme.js";
+import campaignData from "@/assets/scm/text/text.json";
 
 export default {
-  name: 'CampaignHero',
+  name: "CampaignHero",
   data() {
     return {
-      imgPath: require('@/assets/scm/images/campaign-background.webp')
-    }
+      imgPath: require("@/assets/scm/images/campaign-background.webp"),
+    };
   },
   computed: {
     lightTheme() {
-      return lightTheme
+      return lightTheme;
     },
     campaignTagline() {
-      return campaignData.campaign_tagline
+      return campaignData.campaign_tagline;
     },
     campaign() {
-      return this.$store.state.campaign
-    }
+      return this.$store.state.campaign;
+    },
   },
   methods: {
     // Modified to add alpha value.
     // https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
     hexToRgba(hex, alpha) {
-      hex = hex.replace('#', '')
+      hex = hex.replace("#", "");
 
-      const bigint = parseInt(hex, 16)
-      const r = (bigint >> 16) & 255
-      const g = (bigint >> 8) & 255
-      const b = bigint & 255
+      const bigint = parseInt(hex, 16);
+      const r = (bigint >> 16) & 255;
+      const g = (bigint >> 8) & 255;
+      const b = bigint & 255;
 
-      return `${r}, ${g}, ${b}, ${alpha}`
-    }
-  }
-}
+      return `${r}, ${g}, ${b}, ${alpha}`;
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>

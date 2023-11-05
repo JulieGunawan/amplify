@@ -12,25 +12,25 @@
 </template>
 
 <script>
-import SearchReps from '@/components/SearchReps.vue'
+import SearchReps from "@/components/SearchReps.vue";
 
 export default {
-  name: 'Campaign',
+  name: "Campaign",
   components: {
-    SearchReps
+    SearchReps,
   },
   computed: {
     campaignId() {
-      return this.$store.state.campaign.Id
-    }
+      return this.$store.state.campaign.Id;
+    },
   },
   created() {},
   methods: {
     goHome() {
-      this.$router.push('/')
-    }
-  }
-}
+      this.$router.push("/");
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>

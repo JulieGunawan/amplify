@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   app:
@@ -9,7 +9,7 @@ services:
         # Update 'VARIANT' to pick a default version of Node.js: 16, 14, 12.
         # Append -bullseye to pin to local arm64/Apple Silicon.
         # Append -buster to pin to Debian.
-        VARIANT: '16-buster'
+        VARIANT: "16-buster"
 
     # Specify environment variables to set
     environment:
@@ -41,10 +41,10 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_PORT: 5433
     expose:
-      - '5433' # Publishes port to other containers but NOT to host machine
+      - "5433" # Publishes port to other containers but NOT to host machine
     ports:
-      - '5433:5433' # Expose PostgreSQL to the host machine on port 5433
-    command: '-p 5433' # Run the container's PostgreSQL server on non-standard port 5433 as well
+      - "5433:5433" # Expose PostgreSQL to the host machine on port 5433
+    command: "-p 5433" # Run the container's PostgreSQL server on non-standard port 5433 as well
 
 volumes:
   postgres-data: null

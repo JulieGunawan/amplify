@@ -3,7 +3,7 @@
     flat
     :to="{
       name: 'RepClick',
-      params: { member: member.name }
+      params: { member: member.name },
     }"
     class="rep-card"
     @click="handleRepClick"
@@ -54,30 +54,30 @@
 </template>
 
 <script lang="js">
-
 export default {
-  name: 'RepresentativeCard',
-  components: {
-  },
+  name: "RepresentativeCard",
+  components: {},
   props: {
     member: {
       type: Object,
-      default: new Object()
-    }
+      default: new Object(),
+    },
   },
-  emits: ['handle-rep-selected'],
+  emits: ["handle-rep-selected"],
   data() {
-    return {
-    }
+    return {};
   },
   methods: {
     handleRepClick() {
-      console.log('emitting handleRepSelected')
-      this.$store.commit('setGenericValue', { key: 'selectedRep', value: this.member })
-      this.$emit('handle-rep-selected')
-    }
-  }
-}
+      console.log("emitting handleRepSelected");
+      this.$store.commit("setGenericValue", {
+        key: "selectedRep",
+        value: this.member,
+      });
+      this.$emit("handle-rep-selected");
+    },
+  },
+};
 </script>
 
 <style scoped lang="less">

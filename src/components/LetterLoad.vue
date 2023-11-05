@@ -56,35 +56,37 @@
 // import AuthNav from '@/components/AuthNav'
 
 export default {
-  name: 'LetterLoad',
-  components: { /* AuthNav */ },
-  props: {
-    letterBody: { type: String, default: '' },
+  name: "LetterLoad",
+  components: {
+    /* AuthNav */
   },
-  data () {
+  props: {
+    letterBody: { type: String, default: "" },
+  },
+  data() {
     return {
-      isSubmitted: true
-    }
+      isSubmitted: true,
+    };
   },
   computed: {
     selectedRep() {
-      return this.$store.state.selectedRep
+      return this.$store.state.selectedRep;
     },
     user() {
-      return this.$store.state.userData
+      return this.$store.state.userData;
     },
-    currentDate () {
-      return new Intl.DateTimeFormat('en-US').format(new Date())
+    currentDate() {
+      return new Intl.DateTimeFormat("en-US").format(new Date());
     },
     formattedCityState() {
       if (this.user.city) {
-        return `${this.user.city}, ${this.user.state} ${this.user.zip}`
+        return `${this.user.city}, ${this.user.state} ${this.user.zip}`;
       }
 
-      return ''
-    }
-  }
-}
+      return "";
+    },
+  },
+};
 </script>
 
 <style scoped lang="less">
