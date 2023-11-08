@@ -1,19 +1,19 @@
-const express = require('express')
-const router = express.Router()
-const LetterVersion = require('../../db/models/letter-version')
+const express = require("express");
+const router = express.Router();
+const LetterVersion = require("../../db/models/letter-version");
 
-router.get('/:campaignId', async (req, res) => {
-  const campaignId = req.params.campaignId
+router.get("/:campaignId", async (req, res) => {
+  const campaignId = req.params.campaignId;
   try {
     const letterVersions = await LetterVersion.query().where(
-      'campaign_id',
+      "campaign_id",
       campaignId
-    )
-    res.send(letterVersions)
+    );
+    res.send(letterVersions);
   } catch (error) {
-    console.log(error)
-    res.status(500).send({ error: 'Whoops' })
+    console.log(error);
+    res.status(500).send({ error: "Whoops" });
   }
-})
+});
 
-module.exports = router
+module.exports = router;

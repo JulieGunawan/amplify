@@ -9,7 +9,7 @@ permissions:
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:
-  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  group: "${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}"
   cancel-in-progress: true
 
 jobs:
@@ -24,7 +24,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@969bd2663942d722d85b6a8626225850c2f7be4b
         with:
-          node-version-file: '.node-version'
+          node-version-file: ".node-version"
           cache: npm
 
       - name: Install dependencies

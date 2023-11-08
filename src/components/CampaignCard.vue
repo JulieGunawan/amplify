@@ -21,7 +21,7 @@
         text
         :to="{
           name: 'Campaign',
-          params: { campaignId: campaign.id }
+          params: { campaignId: campaign.id },
         }"
       >
         View Campaign
@@ -32,28 +32,30 @@
 
 <script>
 export default {
-  name: 'CampaignCard',
+  name: "CampaignCard",
   props: {
     campaign: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
-    return { defaultCampaignLogoUrl: require('@/assets/images/cardimage.jpeg') }
+    return {
+      defaultCampaignLogoUrl: require("@/assets/images/cardimage.jpeg"),
+    };
   },
   methods: {
     getCampaignLogo(campaign) {
       if (!campaign) {
-        return this.defaultCampaignLogoUrl
+        return this.defaultCampaignLogoUrl;
       }
-      if (campaign.startsWith('/')) {
-        return `${this.publicPath}${campaign.logo_url.slice(1)}`
+      if (campaign.startsWith("/")) {
+        return `${this.publicPath}${campaign.logo_url.slice(1)}`;
       }
-      return campaign
-    }
-  }
-}
+      return campaign;
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>

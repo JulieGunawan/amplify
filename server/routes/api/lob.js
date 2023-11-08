@@ -1,82 +1,82 @@
-const express = require('express')
-const axios = require('axios')
-const Lob = require('lob')
+const express = require("express");
+const axios = require("axios");
+const Lob = require("lob");
 
-const router = express.Router()
+const router = express.Router();
 
 const ALLOWED_ADDRESS_FIELDS = [
-  'name',
-  'email',
-  'company',
-  'description',
-  'line1',
-  'line2',
-  'city',
-  'state',
-  'zip'
-]
-const VALID_US_ZIP_CODE_MATCH = /^(?:\d{1,4}|\d{5}(?:[+-]?\d{4})?)$/
+  "name",
+  "email",
+  "company",
+  "description",
+  "line1",
+  "line2",
+  "city",
+  "state",
+  "zip",
+];
+const VALID_US_ZIP_CODE_MATCH = /^(?:\d{1,4}|\d{5}(?:[+-]?\d{4})?)$/;
 const DELIVERABILITY_WARNINGS = {
-  undeliverable: 'Address is not deliverable',
+  undeliverable: "Address is not deliverable",
   deliverable_incorrect_unit:
-    'Address may be deliverable but contains a suite number that does not exist',
+    "Address may be deliverable but contains a suite number that does not exist",
   deliverable_missing_unit:
-    'Address may be deliverable but is missing a suite number',
+    "Address may be deliverable but is missing a suite number",
   deliverable_unnecessary_unit:
-    'Address may be deliverable but contains an unnecessary suite number'
-}
+    "Address may be deliverable but contains an unnecessary suite number",
+};
 
-router.post('/createAddress', async (req, res) => {
+router.post("/createAddress", async (req, res) => {
   // Get description, to, and template_id from request body
-  const address = req.body || {}
-  const lobApiKey = getLobApiKey()
-  const lob = new Lob({ apiKey: lobApiKey })
+  const address = req.body || {};
+  const lobApiKey = getLobApiKey();
+  const lob = new Lob({ apiKey: lobApiKey });
 
   // Very rough schema validation
   try {
-    const keys = Object.keys(address || {}).sort()
+    const keys = Object.keys(address || {}).sort();
     if (!address || keys.length === 0) {
-      throw new Error('Address object cannot be empty')
+      throw new Error("Address object cannot be empty");
     }
 
     const disallowedKeys = keys.reduce((badKeys, key) => {
       if (!ALLOWED_ADDRESS_FIELDS.includes(key)) {
-        badKeys.push(key)
+        badKeys.push(key);
       }
-      return badKeys
-    }, [])
+      return badKeys;
+    }, []);
 
     if (disallowedKeys.length > 0) {
       throw new Error(
         `Address object contained unexpected keys: ${JSON.stringify(
           disallowedKeys
         )}`
-      )
+      );
     }
 
-    if (!(address.line1 || '').trim()) {
-      throw new Error('Address object must contain a primary line (line1)')
+    if (!(address.line1 || "").trim()) {
+      throw new Error("Address object must contain a primary line (line1)");
     }
 
-    const { zip } = address
-    if (zip != null && typeof zip !== 'string') {
-      throw new Error('Address object must contain a string-based ZIP code')
+    const { zip } = address;
+    if (zip != null && typeof zip !== "string") {
+      throw new Error("Address object must contain a string-based ZIP code");
     }
 
-    let zipCode = (zip || '').trim()
+    let zipCode = (zip || "").trim();
     if (zipCode) {
       if (!VALID_US_ZIP_CODE_MATCH.test(zipCode)) {
         throw new Error(
           `Address object contained an invalid ZIP code: ${zipCode}`
-        )
+        );
       }
-    } else if (!((address.city || '').trim() && (address.state || '').trim())) {
+    } else if (!((address.city || "").trim() && (address.state || "").trim())) {
       throw new Error(
-        'Address object must include both city and state, or a ZIP code'
-      )
+        "Address object must include both city and state, or a ZIP code"
+      );
     }
   } catch (validationError) {
-    return res.status(400).send({ error: validationError.message })
+    return res.status(400).send({ error: validationError.message });
   }
 
   try {
@@ -85,8 +85,8 @@ router.post('/createAddress', async (req, res) => {
       secondary_line: address.line2,
       city: address.city,
       state: address.state,
-      zip_code: address.zip
-    })
+      zip_code: address.zip,
+    });
 
     const {
       id,
@@ -100,42 +100,43 @@ router.post('/createAddress', async (req, res) => {
         zip_code: revisedZip,
         zip_code_plus_4: revisedZipPlus4,
         address_type: addressType,
-        record_type: recordType
-      }
-    } = response
+        record_type: recordType,
+      },
+    } = response;
 
     // For testing/dev environment, lob will not verify address.
     // To get around this, mark primary_line as 'deliverable' and zip as '11111'
-    if (recipient === 'TEST KEYS DO NOT VERIFY ADDRESSES') {
+    if (recipient === "TEST KEYS DO NOT VERIFY ADDRESSES") {
       // Return test verification and skip lob address creation for testing.
       return res
         .status(200)
         .json({ address_id: `test_${id}` })
-        .end()
+        .end();
     }
 
     const isUndeliverable =
-      !deliverability || deliverability === 'undeliverable'
-    const isResidential = addressType === 'residential'
-    const isPostOfficeBox = recordType === 'po_box'
-    const isPuertoRico = revisedState === 'PR'
+      !deliverability || deliverability === "undeliverable";
+    const isResidential = addressType === "residential";
+    const isPostOfficeBox = recordType === "po_box";
+    const isPuertoRico = revisedState === "PR";
 
     const deliverable =
-      !isUndeliverable && isResidential && !isPostOfficeBox && !isPuertoRico
+      !isUndeliverable && isResidential && !isPostOfficeBox && !isPuertoRico;
 
     if (!deliverable) {
-      let errorMessage = 'Address is undeliverable'
+      let errorMessage = "Address is undeliverable";
       if (!isUndeliverable) {
         if (!isResidential) {
-          errorMessage = 'Non-residential addresses are not currently supported'
+          errorMessage =
+            "Non-residential addresses are not currently supported";
         } else if (isPostOfficeBox) {
-          errorMessage = 'Post office boxes are not currently supported'
+          errorMessage = "Post office boxes are not currently supported";
         } else if (isPuertoRico) {
-          errorMessage = 'Puerto Rico addresses are not currently supported'
+          errorMessage = "Puerto Rico addresses are not currently supported";
         }
       }
 
-      return res.status(400).send({ error: errorMessage })
+      return res.status(400).send({ error: errorMessage });
     }
 
     // Create Lob address using variables passed into route via post body
@@ -146,50 +147,50 @@ router.post('/createAddress', async (req, res) => {
       address_line2: revisedLine2,
       address_city: revisedCity,
       address_state: revisedState,
-      address_zip: revisedZip + (revisedZipPlus4 ? `-${revisedZipPlus4}` : ''),
-      address_country: 'US'
-    })
+      address_zip: revisedZip + (revisedZipPlus4 ? `-${revisedZipPlus4}` : ""),
+      address_country: "US",
+    });
 
-    res.status(200).send({ address_id: addressResponse.id })
+    res.status(200).send({ address_id: addressResponse.id });
   } catch (error) {
-    res.status(500).send({ error: 'Something failed!' })
+    res.status(500).send({ error: "Something failed!" });
   }
-})
+});
 
-router.post('/createLetter', async (req, res) => {
+router.post("/createLetter", async (req, res) => {
   // Get description, to, and template_id, and Stripe session id from request body
 
-  const { description, to, from, template_id, sessionId } = req.body || {}
-  const lobApiKey = getLobApiKey()
-  const lob = new Lob({ apiKey: lobApiKey })
-  const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+  const { description, to, from, template_id, sessionId } = req.body || {};
+  const lobApiKey = getLobApiKey();
+  const lob = new Lob({ apiKey: lobApiKey });
+  const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-  const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId)
+  const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId);
 
   try {
     // Check for completed payment before creating letter. Status can be succeeded, failed, or pending. Return server error if failure or pending.
 
     const paymentVerification = await stripe.paymentIntents.retrieve(
       checkoutSession.payment_intent
-    )
+    );
 
-    if (paymentVerification.status !== 'succeeded') {
+    if (paymentVerification.status !== "succeeded") {
       return res
         .status(500)
-        .json({ msg: 'Payment is still pending or has failed.' })
-        .end()
+        .json({ msg: "Payment is still pending or has failed." })
+        .end();
     }
 
     // For development only, check for test_ prefix on 'from' parameter and
     // return a dummy datebefore using lob api.
-    const isTest = from.includes('test_')
+    const isTest = from.includes("test_");
     if (isTest) {
-      const fakeDeliveryDate = Intl.DateTimeFormat('en-US').format(Date.now())
+      const fakeDeliveryDate = Intl.DateTimeFormat("en-US").format(Date.now());
 
       return res
         .status(200)
         .json({ expected_delivery_date: fakeDeliveryDate })
-        .end()
+        .end();
     }
 
     // Create Lob address using variables passed into route via post body
@@ -201,40 +202,40 @@ router.post('/createLetter', async (req, res) => {
         address_line2: to.address_line2,
         address_city: to.address_city,
         address_state: to.address_state,
-        address_zip: to.address_zip
+        address_zip: to.address_zip,
       },
       from: from,
       file: template_id,
-      color: false
-    })
+      color: false,
+    });
 
     return res
       .status(200)
       .send({
-        expected_delivery_date: letter.expected_delivery_date
+        expected_delivery_date: letter.expected_delivery_date,
       })
-      .end()
+      .end();
   } catch (error) {
-    console.error(error)
+    console.error(error);
 
     // We'll need a stripe test env key to test this in our integration tests
     const refund = await stripe.refunds.create({
-      payment_intent: checkoutSession.payment_intent
-    })
+      payment_intent: checkoutSession.payment_intent,
+    });
     // TODO handle error for refund error. Not doing this currently because chance of
     // user making it this far in the process and both LOB API and Stripe failing is very small.
     return res
       .status(500)
       .send({
-        error: `Something failed! A refund of ${refund.amount} ${refund.currency} has been issued`
+        error: `Something failed! A refund of ${refund.amount} ${refund.currency} has been issued`,
       })
-      .end()
+      .end();
   }
-})
+});
 
-router.get('/templates/:templateId', async (req, res) => {
-  const { templateId } = req.params
-  var templateInfo = {}
+router.get("/templates/:templateId", async (req, res) => {
+  const { templateId } = req.params;
+  var templateInfo = {};
 
   try {
     // We must use `axios` here as the `lob` package does not yet support
@@ -242,80 +243,80 @@ router.get('/templates/:templateId', async (req, res) => {
     const response = await axios.get(
       `https://api.lob.com/v1/templates/${templateId}`,
       {
-        auth: { username: getLobApiKey() }
+        auth: { username: getLobApiKey() },
       }
-    )
+    );
 
-    templateInfo = response.data
-    return res.status(200).send(templateInfo)
+    templateInfo = response.data;
+    return res.status(200).send(templateInfo);
   } catch (error) {
-    return handleLobError(error, res)
+    return handleLobError(error, res);
   }
-})
+});
 
-router.post('/addressVerification', async (req, res) => {
-  const address = req.body
+router.post("/addressVerification", async (req, res) => {
+  const address = req.body;
 
   // Very rough schema validation
   try {
-    const keys = Object.keys(address || {}).sort()
+    const keys = Object.keys(address || {}).sort();
     if (!address || keys.length === 0) {
-      throw new Error('Address object cannot be empty')
+      throw new Error("Address object cannot be empty");
     }
 
     const disallowedKeys = keys.reduce((badKeys, key) => {
       if (!ALLOWED_ADDRESS_FIELDS.includes(key)) {
-        badKeys.push(key)
+        badKeys.push(key);
       }
-      return badKeys
-    }, [])
+      return badKeys;
+    }, []);
 
     if (disallowedKeys.length > 0) {
       throw new Error(
         `Address object contained unexpected keys: ${JSON.stringify(
           disallowedKeys
         )}`
-      )
+      );
     }
 
-    if (!(address.line1 || '').trim()) {
-      throw new Error('Address object must contain a primary line (line1)')
+    if (!(address.line1 || "").trim()) {
+      throw new Error("Address object must contain a primary line (line1)");
     }
 
-    const { zip } = address
-    if (zip != null && typeof zip !== 'string') {
-      throw new Error('Address object must contain a string-based ZIP code')
+    const { zip } = address;
+    if (zip != null && typeof zip !== "string") {
+      throw new Error("Address object must contain a string-based ZIP code");
     }
 
-    let zipCode = (zip || '').trim()
+    let zipCode = (zip || "").trim();
     if (zipCode) {
       if (!VALID_US_ZIP_CODE_MATCH.test(zipCode)) {
         throw new Error(
           `Address object contained an invalid ZIP code: ${zipCode}`
-        )
+        );
       }
-    } else if (!((address.city || '').trim() && (address.state || '').trim())) {
+    } else if (!((address.city || "").trim() && (address.state || "").trim())) {
       throw new Error(
-        'Address object must include both city and state, or a ZIP code'
-      )
+        "Address object must include both city and state, or a ZIP code"
+      );
     }
   } catch (validationError) {
-    return res.status(400).send({ error: validationError.message })
+    return res.status(400).send({ error: validationError.message });
   }
 
-  const { line1, line2, city, state, zip } = address
+  const { line1, line2, city, state, zip } = address;
   // Ensure the ZIP code is at least 5 digits
-  const zipCode = zip ? zip.padStart(5, '0') : null
+  const zipCode = zip ? zip.padStart(5, "0") : null;
 
   try {
-    const lob = new Lob({ apiKey: getLobApiKey() })
+    const lob = new Lob({ apiKey: getLobApiKey() });
     const response = await lob.usVerifications.verify({
       primary_line: line1,
       secondary_line: line2,
       city,
       state,
-      zip_code: zipCode
-    })
+      zip_code: zipCode,
+    });
 
     const {
       deliverability,
@@ -327,33 +328,34 @@ router.post('/addressVerification', async (req, res) => {
         zip_code: revisedZip,
         zip_code_plus_4: revisedZipPlus4,
         address_type: addressType,
-        record_type: recordType
-      }
-    } = response
+        record_type: recordType,
+      },
+    } = response;
 
     const isUndeliverable =
-      !deliverability || deliverability === 'undeliverable'
-    const isResidential = addressType === 'residential'
-    const isPostOfficeBox = recordType === 'po_box'
-    const isPuertoRico = revisedState === 'PR'
+      !deliverability || deliverability === "undeliverable";
+    const isResidential = addressType === "residential";
+    const isPostOfficeBox = recordType === "po_box";
+    const isPuertoRico = revisedState === "PR";
 
     const deliverable =
-      !isUndeliverable && isResidential && !isPostOfficeBox && !isPuertoRico
-    const warning = DELIVERABILITY_WARNINGS[deliverability] || null
+      !isUndeliverable && isResidential && !isPostOfficeBox && !isPuertoRico;
+    const warning = DELIVERABILITY_WARNINGS[deliverability] || null;
 
     if (!deliverable) {
-      let errorMessage = 'Address is undeliverable'
+      let errorMessage = "Address is undeliverable";
       if (!isUndeliverable) {
         if (!isResidential) {
-          errorMessage = 'Non-residential addresses are not currently supported'
+          errorMessage =
+            "Non-residential addresses are not currently supported";
         } else if (isPostOfficeBox) {
-          errorMessage = 'Post office boxes are not currently supported'
+          errorMessage = "Post office boxes are not currently supported";
         } else if (isPuertoRico) {
-          errorMessage = 'Puerto Rico addresses are not currently supported'
+          errorMessage = "Puerto Rico addresses are not currently supported";
         }
       }
 
-      return res.status(400).send({ error: errorMessage })
+      return res.status(400).send({ error: errorMessage });
     }
 
     return res.status(200).send({
@@ -364,81 +366,83 @@ router.post('/addressVerification', async (req, res) => {
         line2: revisedLine2 || null,
         city: revisedCity,
         state: revisedState,
-        zip: revisedZip + (revisedZipPlus4 ? '-' + revisedZipPlus4 : '')
-      }
-    })
+        zip: revisedZip + (revisedZipPlus4 ? "-" + revisedZipPlus4 : ""),
+      },
+    });
   } catch (error) {
     // This endpoint should not return anything other than `200` status
     // codes, even for undeliverable addresses
-    return handleLobError(error, res)
+    return handleLobError(error, res);
   }
-})
+});
 
-module.exports = router
+module.exports = router;
 
 // Temporary implementation for fallback with deprecation warnings
 function getLobApiKey() {
-  const { LOB_API_KEY, LiveLob } = process.env
-  const lobApiKey = LOB_API_KEY || LiveLob
+  const { LOB_API_KEY, LiveLob } = process.env;
+  const lobApiKey = LOB_API_KEY || LiveLob;
 
   if (LiveLob) {
     if (LOB_API_KEY) {
-      console.warn('Using "LOB_API_KEY" environment variable.')
+      console.warn('Using "LOB_API_KEY" environment variable.');
       console.warn(
         'Please remove your deprecated "LiveLob" environment variable!'
-      )
+      );
     } else {
-      console.warn('Expected "LOB_API_KEY" environment variable was not found.')
+      console.warn(
+        'Expected "LOB_API_KEY" environment variable was not found.'
+      );
       console.warn(
         'Falling back to deprecated "LiveLob" environment variable....'
-      )
-      console.warn('Please update your environment to use the expected key!')
+      );
+      console.warn("Please update your environment to use the expected key!");
     }
   }
 
-  return lobApiKey
+  return lobApiKey;
 }
 
 function handleLobError(error, res) {
-  let status = 500
-  let errorMessage = 'Whoops'
+  let status = 500;
+  let errorMessage = "Whoops";
 
   if (error) {
     // error.response is from the `axios` package
     // error._response is from the `lob` package
     if (error.response || error._response) {
-      status = 502
+      status = 502;
 
-      let lobStatus = null
-      let lobApiError = {}
+      let lobStatus = null;
+      let lobApiError = {};
 
       // Handle Lob API errors from `axios` requests
       if (error.response) {
-        lobStatus = error.response.status
-        lobApiError = error.response.data.error
+        lobStatus = error.response.status;
+        lobApiError = error.response.data.error;
       }
       // Handle Lob API errors from `lob` requests
       else if (error._response) {
-        lobStatus = error._response.statusCode
-        lobApiError = error._response.body.error
+        lobStatus = error._response.statusCode;
+        lobApiError = error._response.body.error;
       }
 
-      if (process.env.NODE_ENV !== 'test') {
+      if (process.env.NODE_ENV !== "test") {
         console.error(
           `Lob API error (${lobStatus}): ${JSON.stringify(lobApiError)}`
-        )
+        );
       }
 
       // If the error is being blamed on the request...
       // See: https://docs.lob.com/#errors
       if ([400, 404, 422].includes(lobStatus)) {
-        status = 400
-        errorMessage = lobApiError.message
+        status = 400;
+        errorMessage = lobApiError.message;
       }
     } else {
-      console.error(error)
+      console.error(error);
     }
   }
 
-  return res.status(status).send({ error: errorMessage })
+  return res.status(status).send({ error: errorMessage });
 }

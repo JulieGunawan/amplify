@@ -8,13 +8,13 @@
 </template>
 
 <script>
-import ActionComplete from '@/components/ActionComplete.vue'
+import ActionComplete from "@/components/ActionComplete.vue";
 // import CauseCarousel from '@/components/CauseCarousel.vue'
 
 export default {
   components: {
-    ActionComplete
+    ActionComplete,
     // CauseCarousel
-  }
-}
+  },
+};
 </script>

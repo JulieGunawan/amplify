@@ -1,4 +1,4 @@
-name: 'CodeQL'
+name: "CodeQL"
 
 on:
   push:
@@ -10,10 +10,10 @@ on:
       - main
     # Only execute on PRs if relevant files changed
     paths:
-      - '**/*.js'
-      - '.github/workflows/codeql-analysis.yml'
+      - "**/*.js"
+      - ".github/workflows/codeql-analysis.yml"
   schedule:
-    - cron: '27 1 * * 0'
+    - cron: "27 1 * * 0"
 
 permissions:
   actions: read
@@ -22,7 +22,7 @@ permissions:
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:
-  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  group: "${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}"
   cancel-in-progress: true
 
 jobs:
