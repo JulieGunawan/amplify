@@ -21,13 +21,11 @@ jobs:
             });
             const reviewers = response.data.map(r => r.user.login);
             const author = context.payload.pull_request.user.login;
-            const isNewContributor = !reviewers.includes(author);
             console.log('Is the author new contributor?' ${isNewContributor});
             console.log('author: ${author}');
-            return {isNewContributor};
+            return {author};
 
       - name: add "new contributor" label
-        if: steps.check_contributor.outputs.isNewContributor == 'true'
         run: |
           echo "::add-labels::new contributor"
         env:
