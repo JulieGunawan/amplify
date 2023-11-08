@@ -29,7 +29,7 @@
                         backgroundColor:
                           currentFilter === 'federal' && isActive
                             ? 'blue'
-                            : 'gray'
+                            : 'gray',
                       }"
                       @click="FilterList('federal')"
                     >
@@ -45,7 +45,7 @@
                         backgroundColor:
                           currentFilter === 'state' && isActive
                             ? 'blue'
-                            : 'gray'
+                            : 'gray',
                       }"
                       @click="FilterList('state')"
                     >
@@ -60,7 +60,7 @@
                         backgroundColor:
                           currentFilter === 'local' && isActive
                             ? 'blue'
-                            : 'gray'
+                            : 'gray',
                       }"
                       @click="FilterList('local')"
                     >
@@ -76,7 +76,7 @@
                         backgroundColor:
                           currentFilter === 'county' && isActive
                             ? 'blue'
-                            : 'gray'
+                            : 'gray',
                       }"
                       @click="FilterList('county')"
                     >
@@ -92,7 +92,7 @@
                         backgroundColor:
                           currentFilter === 'school' && isActive
                             ? 'blue'
-                            : 'gray'
+                            : 'gray',
                       }"
                       @click="FilterList('school')"
                     >
@@ -107,7 +107,7 @@
                       color="primary"
                       :to="{
                         name: 'Reps',
-                        params: { postalCode: postalCode || '00000' }
+                        params: { postalCode: postalCode || '00000' },
                       }"
                       clickclass="mr-4"
                       @click="CreateRepList()"
@@ -167,112 +167,114 @@
 </template>
 
 <script>
-import campaignData from '@/assets/scm/text/text.json'
-import RepresentativeCard from '@/components/RepresentativeCard.vue'
-import TakeAction from '@/components/TakeAction.vue'
-import axios from 'axios'
+import campaignData from "@/assets/scm/text/text.json";
+import RepresentativeCard from "@/components/RepresentativeCard.vue";
+import TakeAction from "@/components/TakeAction.vue";
+import axios from "axios";
 export default {
-  name: 'SearchReps',
+  name: "SearchReps",
   components: {
     RepresentativeCard,
-    TakeAction
+    TakeAction,
   },
   data() {
     return {
-      letterBody: '<h1>Test</h1>',
+      letterBody: "<h1>Test</h1>",
       congressMembers: [],
-      currentFilter: '',
+      currentFilter: "",
       hasContent: true,
-      postalCode: this.$route.params.postalCode || '',
+      postalCode: this.$route.params.postalCode || "",
       listVisible: false,
-      isActive: false
-    }
+      isActive: false,
+    };
   },
   computed: {
     letterId() {
-      return this.$store.state.letterId
+      return this.$store.state.letterId;
     },
     selectedRep() {
-      return this.$store.state.selectedRep
+      return this.$store.state.selectedRep;
     },
     mode() {
-      return this.$store.state.mode
+      return this.$store.state.mode;
     },
     campaignText() {
-      return campaignData.supplemental_text
+      return campaignData.supplemental_text;
     },
     campaignId() {
-      return this.$store.state.campaign.id
-    }
+      return this.$store.state.campaign.id;
+    },
   },
   methods: {
     async loadLetterWorkflow() {
       const letterVersions = await axios.get(
         `/api/letter_versions/${this.campaignId}`
-      )
+      );
       const latest =
-        letterVersions.data[letterVersions.data.length - 1].template_id
-      const letter = await axios.get(`/api/lob/templates/${latest}`)
+        letterVersions.data[letterVersions.data.length - 1].template_id;
+      const letter = await axios.get(`/api/lob/templates/${latest}`);
 
-      this.$store.commit('setGenericValue', { key: 'letterId', value: latest })
+      this.$store.commit("setGenericValue", { key: "letterId", value: latest });
 
-      this.letterBody = letter.data.versions[0].html
+      this.letterBody = letter.data.versions[0].html;
 
-      this.listVisible = true
+      this.listVisible = true;
     },
     CheckInputContent: function () {
-      if (this.postalCode !== '') {
-        this.hasContent = true
+      if (this.postalCode !== "") {
+        this.hasContent = true;
       } else {
-        this.hasContent = false
+        this.hasContent = false;
       }
     },
     async CreateRepList() {
       try {
-        this.$store.commit('setGenericValue', {
-          key: 'zipcode',
-          value: this.postalCode
-        })
-        const res = await axios.get('/api/representatives/' + this.postalCode)
-        this.isActive = false
-        this.congressMembers = res.data
-        this.hasContent = true
-        this.listVisible = true
+        this.$store.commit("setGenericValue", {
+          key: "zipcode",
+          value: this.postalCode,
+        });
+        const res = await axios.get("/api/representatives/" + this.postalCode);
+        this.isActive = false;
+        this.congressMembers = res.data;
+        this.hasContent = true;
+        this.listVisible = true;
       } catch (e) {
-        console.error(e)
+        console.error(e);
       }
     },
     async FilterList(level) {
       try {
-        this.currentFilter = level
+        this.currentFilter = level;
 
         if (!this.isActive) {
-          this.isActive = true
-          const params = {}
+          this.isActive = true;
+          const params = {};
           if (this.currentFilter != null) {
-            params.filter = this.currentFilter
+            params.filter = this.currentFilter;
           }
 
           const res = await axios.get(
-            '/api/representatives/' + this.postalCode,
+            "/api/representatives/" + this.postalCode,
             {
-              params
+              params,
             }
-          )
+          );
 
-          this.congressMembers = res.data
+          this.congressMembers = res.data;
         } else {
-          this.isActive = false
-          const res = await axios.get('/api/representatives/' + this.postalCode)
+          this.isActive = false;
+          const res = await axios.get(
+            "/api/representatives/" + this.postalCode
+          );
 
-          this.congressMembers = res.data
+          this.congressMembers = res.data;
         }
       } catch (e) {
-        console.error(e)
+        console.error(e);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped lang="less">

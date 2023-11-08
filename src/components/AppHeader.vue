@@ -31,16 +31,16 @@
 
 <script>
 export default {
-  name: 'NavBar',
+  name: "NavBar",
   data() {
     return {
       dialog: false,
       menuItems: [
-        { title: 'Home', path: '/' }
+        { title: "Home", path: "/" },
         // { title: 'About', path: '/about' }
-      ]
-    }
-  }
-}
+      ],
+    };
+  },
+};
 </script>
 <style lang="less"></style>

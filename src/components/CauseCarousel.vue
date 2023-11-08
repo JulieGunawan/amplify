@@ -25,44 +25,41 @@
 </template>
 
 <script lang="js">
-import axios from 'axios'
-import CampaignCard from './CampaignCard.vue'
+import axios from "axios";
+import CampaignCard from "./CampaignCard.vue";
 
 export default {
-    name: 'CauseCarousel',
-    components: { CampaignCard },
-    props: [],
-    data () {
-      return {
-        slides: 0,
-        defaultCampaignLogoUrl: require('@/assets/images/cardimage.jpeg'),
-        repName: 'Test Name',  // Needs to be a prop or come from state?
-        campaigns: [],
+  name: "CauseCarousel",
+  components: { CampaignCard },
+  props: [],
+  data() {
+    return {
+      slides: 0,
+      defaultCampaignLogoUrl: require("@/assets/images/cardimage.jpeg"),
+      repName: "Test Name", // Needs to be a prop or come from state?
+      campaigns: [],
+    };
+  },
+  computed: {},
+  created() {
+    // Get campaigns from campaigns api
+    axios.get("/api/campaigns").then((res) => {
+      this.campaigns = [...res.data];
+      console.log(this.campaigns);
+    });
+  },
+  methods: {
+    getCampaignLogo(campaign) {
+      if (!campaign) {
+        return this.defaultCampaignLogoUrl;
       }
-    },
-    computed: {
-
-    },
-    created () {
-      // Get campaigns from campaigns api
-      axios.get('/api/campaigns')
-        .then((res) => {
-          this.campaigns = [...res.data]
-          console.log(this.campaigns)
-        })
-    },
-    methods: {
-      getCampaignLogo(campaign) {
-        if (!campaign) {
-          return this.defaultCampaignLogoUrl
-        }
-        if (campaign.startsWith('/')) {
-          return `${this.publicPath}${campaign.logo_url.slice(1)}`
-        }
-        return campaign
+      if (campaign.startsWith("/")) {
+        return `${this.publicPath}${campaign.logo_url.slice(1)}`;
       }
-    }
-}
+      return campaign;
+    },
+  },
+};
 </script>
 
 <style scoped lang="less">

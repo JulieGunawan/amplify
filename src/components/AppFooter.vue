@@ -52,24 +52,24 @@ export default {
   data: () => ({
     icons: [
       {
-        logo: 'mdi-facebook',
-        url: 'https://www.facebook.com/savetheshellmound'
+        logo: "mdi-facebook",
+        url: "https://www.facebook.com/savetheshellmound",
       },
       {
-        logo: 'mdi-twitter',
-        url: 'https://twitter.com/programequity'
+        logo: "mdi-twitter",
+        url: "https://twitter.com/programequity",
       },
       {
-        logo: 'mdi-linkedin',
-        url: 'http://www.linkedin.com/company/programequity/'
+        logo: "mdi-linkedin",
+        url: "http://www.linkedin.com/company/programequity/",
       },
       {
-        logo: 'mdi-instagram',
-        url: 'https://www.instagram.com/passthepolicy/'
-      }
-    ]
-  })
-}
+        logo: "mdi-instagram",
+        url: "https://www.instagram.com/passthepolicy/",
+      },
+    ],
+  }),
+};
 </script>
 
 <style lang="less" scoped>

@@ -78,26 +78,26 @@
 </template>
 
 <script lang="js">
-import axios from 'axios'
-import { formatDonationAmount } from '../../util/format.js'
-import { validateDonationAmount } from '../../util/validate.js'
+import axios from "axios";
+import { formatDonationAmount } from "../../util/format.js";
+import { validateDonationAmount } from "../../util/validate.js";
 export default {
-  name: 'DonateMoney',
+  name: "DonateMoney",
   props: [],
-  data () {
+  data() {
     return {
       donationAmount: 2,
       customAmountSelected: false,
       customDonationAmount: undefined,
       inputRule: [
-        (val) => validateDonationAmount(formatDonationAmount(val)) || 'Invalid amount: acceptable value ranges between $1.50 and $10,000.00'
-      ]
-    }
+        (val) =>
+          validateDonationAmount(formatDonationAmount(val)) ||
+          "Invalid amount: acceptable value ranges between $1.50 and $10,000.00",
+      ],
+    };
   },
-  computed: {
-  },
-  mounted () {
-  },
+  computed: {},
+  mounted() {},
   methods: {
     unsetCustomAmountSelection() {
       this.customAmountSelected = false;
@@ -106,8 +106,9 @@ export default {
       this.customAmountSelected = !this.customAmountSelected;
     },
     submit() {
-      const value = this.customAmountSelected ?
-        this.customDonationAmount : this.donationAmount;
+      const value = this.customAmountSelected
+        ? this.customDonationAmount
+        : this.donationAmount;
       const input = formatDonationAmount(value);
 
       if (this.customAmountSelected) {
@@ -120,21 +121,25 @@ export default {
       return;
     },
     createCheckoutSession(donationAmount) {
-      axios.post('/api/checkout/create-checkout-session', {donationAmount})
+      axios
+        .post("/api/checkout/create-checkout-session", { donationAmount })
         .then((response) => {
           // Dump state to local storage before redirect
-          this.$store.dispatch('dumpStateToLocalStorage', response.data.sessionId)
+          this.$store.dispatch(
+            "dumpStateToLocalStorage",
+            response.data.sessionId,
+          );
           // Redirect to Stripe
-          location.href = response.data.url
+          location.href = response.data.url;
         })
         .catch((error) => {
           // Bring custom error message to top-level for ease of debugging
           const { data } = error.response;
-          console.log(data, error)
-        })
-    }
-  }
-}
+          console.log(data, error);
+        });
+    },
+  },
+};
 </script>
 
 <style scoped lang="less">

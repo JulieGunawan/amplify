@@ -37,7 +37,7 @@
       color="secondary"
       :to="{
         name: 'Campaign',
-        params: { campaignId: campaignId || 'undefined' }
+        params: { campaignId: campaignId || 'undefined' },
       }"
     >
       Write Your Representatives Now
@@ -46,18 +46,18 @@
 </template>
 
 <script>
-import campaignData from '@/assets/scm/text/text.json'
+import campaignData from "@/assets/scm/text/text.json";
 export default {
-  name: 'CampaignBlurb',
+  name: "CampaignBlurb",
   computed: {
     flavorText() {
-      return campaignData.campaign_text
+      return campaignData.campaign_text;
     },
     campaignId() {
-      return `${this.$store.state.campaign.id}`
-    }
-  }
-}
+      return `${this.$store.state.campaign.id}`;
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>

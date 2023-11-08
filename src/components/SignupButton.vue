@@ -10,13 +10,13 @@
 
 <script>
 export default {
-  name: 'SignupButton',
+  name: "SignupButton",
   methods: {
     signup() {
       this.$auth.loginWithRedirect({
-        screen_hint: 'signup'
-      })
-    }
-  }
-}
+        screen_hint: "signup",
+      });
+    },
+  },
+};
 </script>

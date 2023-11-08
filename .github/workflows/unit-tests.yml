@@ -27,10 +27,10 @@ jobs:
       - name: Run tests
         run: npm test -- server/__tests__/unit/
         env:
-          CICERO_API_KEY: '${{ secrets.TEST_CICERO_API_KEY }}'
-          LOB_API_KEY: '${{ secrets.TEST_LOB_API_KEY }}'
-          STRIPE_SECRET_KEY: '${{ secrets.TEST_STRIPE_SECRET_KEY }}'
+          CICERO_API_KEY: "${{ secrets.TEST_CICERO_API_KEY }}"
+          LOB_API_KEY: "${{ secrets.TEST_LOB_API_KEY }}"
+          STRIPE_SECRET_KEY: "${{ secrets.TEST_STRIPE_SECRET_KEY }}"
           SERVER_PORT: 8080
-          CLIENT_ORIGIN_URL: 'http://localhost:8080'
+          CLIENT_ORIGIN_URL: "http://localhost:8080"
           AUTH0_AUDIENCE: your_Auth0_identifier_value
           AUTH0_DOMAIN: your_Auth0_domain

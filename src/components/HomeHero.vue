@@ -24,8 +24,8 @@
 
 <script>
 export default {
-  name: 'HomeHero'
-}
+  name: "HomeHero",
+};
 </script>
 
 <style lang="less">

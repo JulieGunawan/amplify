@@ -136,73 +136,73 @@
 </template>
 
 <script>
-import LetterLoad from '@/components/LetterLoad.vue'
-import SignName from '@/components/SignName.vue'
-import DonateMoney from '@/components/DonateMoney.vue'
+import LetterLoad from "@/components/LetterLoad.vue";
+import SignName from "@/components/SignName.vue";
+import DonateMoney from "@/components/DonateMoney.vue";
 
 export default {
-  name: 'TakeAction',
+  name: "TakeAction",
   components: { LetterLoad, SignName, DonateMoney },
   props: {
     letterBody: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       panel: 0,
       panelStatus: {
-        0: 'inProgress',
-        1: 'default',
-        2: 'default'
+        0: "inProgress",
+        1: "default",
+        2: "default",
       },
-      userData: {}
-    }
+      userData: {},
+    };
   },
   computed: {
     selectedRep() {
-      return this.$store.state.selectedRep
-    }
+      return this.$store.state.selectedRep;
+    },
   },
   methods: {
     nextPage(attrs) {
-      this.$store.dispatch('setLetterAttrs', attrs)
+      this.$store.dispatch("setLetterAttrs", attrs);
 
-      const previousPanel = this.panel
-      const nextPanel = this.panel + 1
+      const previousPanel = this.panel;
+      const nextPanel = this.panel + 1;
 
       //update previous panel's status
-      this.panelStatus[previousPanel] = 'completed'
+      this.panelStatus[previousPanel] = "completed";
       //update next panel's status
-      this.panelStatus[nextPanel] = 'inProgress'
+      this.panelStatus[nextPanel] = "inProgress";
       //move to next panel
-      this.panel += 1
+      this.panel += 1;
     },
     isActive(panelNumber) {
       return (
-        this.panelStatus[panelNumber] === 'inProgress' ||
-        this.panelStatus[panelNumber] === 'completed'
-      )
+        this.panelStatus[panelNumber] === "inProgress" ||
+        this.panelStatus[panelNumber] === "completed"
+      );
     },
     determineStyles(element, status) {
-      if (element === 'icon') {
-        if (status === 'default') return 'primary lighten-1'
-        else return 'primary'
-      } else if (element === 'avatar') {
-        if (status === 'completed') return 'green lighten-1'
-        else if (status === 'inProgress') return 'primary'
-        else return 'light-grey'
-      } else if (element === 'title') {
-        if (status === 'inProgress') return 'primary--text'
-        else return 'dark--text'
+      if (element === "icon") {
+        if (status === "default") return "primary lighten-1";
+        else return "primary";
+      } else if (element === "avatar") {
+        if (status === "completed") return "green lighten-1";
+        else if (status === "inProgress") return "primary";
+        else return "light-grey";
+      } else if (element === "title") {
+        if (status === "inProgress") return "primary--text";
+        else return "dark--text";
       }
     },
     handleAddress(address) {
-      this.userData = address
-    }
-  }
-}
+      this.userData = address;
+    },
+  },
+};
 </script>
 
 <style scoped lang="less">

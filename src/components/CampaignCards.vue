@@ -28,7 +28,7 @@
               text
               :to="{
                 name: 'Campaign',
-                params: { campaignId: campaign.id }
+                params: { campaignId: campaign.id },
               }"
               @click="setCampaign(index)"
             >
@@ -44,43 +44,43 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 
 export default {
-  name: 'CampaignCards',
+  name: "CampaignCards",
   data() {
     return {
       campaigns: [],
       publicPath: process.env.BASE_URL,
-      defaultCampaignLogoUrl: require('@/assets/images/cardimage.jpeg')
-    }
+      defaultCampaignLogoUrl: require("@/assets/images/cardimage.jpeg"),
+    };
   },
   async created() {
     try {
-      const res = await axios.get('/api/campaigns')
-      this.campaigns = res.data
+      const res = await axios.get("/api/campaigns");
+      this.campaigns = res.data;
     } catch (e) {
-      console.error(e)
+      console.error(e);
     }
   },
   methods: {
     getCampaignLogo(campaign) {
       if (!campaign.logo_url) {
-        return this.defaultCampaignLogoUrl
+        return this.defaultCampaignLogoUrl;
       }
-      if (campaign.logo_url.startsWith('/')) {
-        return `${this.publicPath}${campaign.logo_url.slice(1)}`
+      if (campaign.logo_url.startsWith("/")) {
+        return `${this.publicPath}${campaign.logo_url.slice(1)}`;
       }
-      return campaign.logo_url
+      return campaign.logo_url;
     },
     setCampaign(index) {
-      this.$store.commit('setObjectValue', {
-        key: 'campaign',
-        data: this.campaigns[index]
-      })
-    }
-  }
-}
+      this.$store.commit("setObjectValue", {
+        key: "campaign",
+        data: this.campaigns[index],
+      });
+    },
+  },
+};
 </script>
 
 <style scoped></style>
