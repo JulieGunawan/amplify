@@ -9,32 +9,26 @@ jobs:
   labeler:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/github-script@v6
+      - name: Check if user is a new contributor
+        uses: actions/github-script@v6
         with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const eventType = context.eventName;
-            // Get a list of all issues created by the PR opener
-            // See: https://octokit.github.io/rest.js/#pagination
-            const creator = context.payload.sender.login
-            const opts = github.rest.issues.listForRepo.endpoint.merge({
-              ...context.issue,
-              creator,
-              state: 'all'
-            })
-            const issues = await github.paginate(opts)
-
-            for (const issue of issues) {
-              if (issue.number === context.issue.number) {
-                continue
-              }
-
-              if (issue.pull_request || issue.user.login === creator) {
-                return // Creator is already a contributor.
-              } 
-            }
-            await github.rest.issues.addLabels({
-              issue_number: context.issue.number,
+            const eventType = await github.pulls.listReviews({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              labels:["new contributor"]
+              pull_number: context.payload.pull_request.number
             });
+            const reviewers = response.data.map(r => r.user.login);
+            const author = context.payload.pull_request.user.login;
+            const isNewContributor = !reviewers.includes(author);
+            console.log('Is the author new contributor?' ${isNewContributor});
+            console.log('author: ${author}');
+            return {isNewContributor};
+
+      - name: add "new contributor" label
+        if: steps.check_contributor.outputs.isNewContributor == 'true'
+        run: |
+          echo "::add-labels::new contributor"
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
