@@ -22,10 +22,10 @@ if (process.env.NODE_ENV !== "production") {
           format: "YYYY-MM-DD HH:mm:ss",
         }),
         errors({ stack: true }),
-        logFormat,
+        logFormat
       ),
       defaultMeta: { service: "user-service" },
-    }),
+    })
   );
 }
 

@@ -27,7 +27,7 @@ module.exports = {
     for (const volunteer of volunteerList) {
       const nameObj = convertNameStringToObject(volunteer.name);
       const addressObj = convertAddressStringToObject(
-        volunteer.physical_address,
+        volunteer.physical_address
       );
       await knex(tableName)
         .where({ id: volunteer.id })

@@ -59,7 +59,7 @@ async function migrateToLatestSchemas(config) {
     console.log(`Migrated database "${database}" to latest schemas!`);
   } catch (error) {
     console.error(
-      `Error migrating to latest schemas for database "${database}": ${error.message}`,
+      `Error migrating to latest schemas for database "${database}": ${error.message}`
     );
     throw error;
   } finally {
@@ -82,7 +82,7 @@ async function runDataSeeders(config) {
   const seedDirStats = fs.statSync(seedDir, { throwIfNoEntry: false });
   if (!seedDirStats) {
     console.warn(
-      `Skipping! The data seed directory does not exist: ${config.seeds.directory}`,
+      `Skipping! The data seed directory does not exist: ${config.seeds.directory}`
     );
     return;
   }
@@ -90,7 +90,7 @@ async function runDataSeeders(config) {
   try {
     if (!seedDirStats.isDirectory()) {
       throw new Error(
-        `The data seed path exists but is not a directory: ${config.seeds.directory}`,
+        `The data seed path exists but is not a directory: ${config.seeds.directory}`
       );
     }
 
@@ -99,7 +99,7 @@ async function runDataSeeders(config) {
     console.log(`Created seed data in database "${database}"!`);
   } catch (error) {
     console.error(
-      `Error creating seed data for database "${database}": ${error.message}`,
+      `Error creating seed data for database "${database}": ${error.message}`
     );
     throw error;
   } finally {

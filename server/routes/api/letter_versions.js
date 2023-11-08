@@ -7,7 +7,7 @@ router.get("/:campaignId", async (req, res) => {
   try {
     const letterVersions = await LetterVersion.query().where(
       "campaign_id",
-      campaignId,
+      campaignId
     );
     res.send(letterVersions);
   } catch (error) {

@@ -12,7 +12,7 @@ function getConfig(env) {
 
   if (!config) {
     throw new Error(
-      `No config found in "knexfile.js" for environment "${targetEnv}"`,
+      `No config found in "knexfile.js" for environment "${targetEnv}"`
     );
   }
 

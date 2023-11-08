@@ -70,7 +70,7 @@ router.get("/:searchText", async (req, res) => {
   */
   let isValidAddress =
     /^(\d{3,})\s?(\w{0,5})\s([a-zA-Z]{2,30})\s?([a-zA-Z]{2,15}).?\s?(\w{0,5})$/.test(
-      streetAddress,
+      streetAddress
     );
 
   if (!isValidZIPcode && !isValidAddress) {
@@ -286,7 +286,7 @@ function getOfficialSocialMediaPages(identifiers) {
       case "FACEBOOK-OFFICIAL":
         var new_identifier_value = identifier.identifier_value.replace(
           /^(?:https?:\/\/(?:www\.)?facebook\.com\/)?(.+)\/?$/,
-          "$1",
+          "$1"
         );
 
         social_media_pages.push({

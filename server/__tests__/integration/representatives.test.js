@@ -40,7 +40,7 @@ describe("GET /api/representatives/:zipCode", () => {
     });
     // Make a request to the API with half of the zipCode
     const response = await request(app).get(
-      `/api/representatives/${zipCode.slice(0, 5)}`,
+      `/api/representatives/${zipCode.slice(0, 5)}`
     );
     expect(response.status).toBe(200);
     expect(response.body).toEqual(apiResponse);

@@ -49,8 +49,8 @@ router.post("/createAddress", async (req, res) => {
     if (disallowedKeys.length > 0) {
       throw new Error(
         `Address object contained unexpected keys: ${JSON.stringify(
-          disallowedKeys,
-        )}`,
+          disallowedKeys
+        )}`
       );
     }
 
@@ -67,12 +67,12 @@ router.post("/createAddress", async (req, res) => {
     if (zipCode) {
       if (!VALID_US_ZIP_CODE_MATCH.test(zipCode)) {
         throw new Error(
-          `Address object contained an invalid ZIP code: ${zipCode}`,
+          `Address object contained an invalid ZIP code: ${zipCode}`
         );
       }
     } else if (!((address.city || "").trim() && (address.state || "").trim())) {
       throw new Error(
-        "Address object must include both city and state, or a ZIP code",
+        "Address object must include both city and state, or a ZIP code"
       );
     }
   } catch (validationError) {
@@ -171,7 +171,7 @@ router.post("/createLetter", async (req, res) => {
     // Check for completed payment before creating letter. Status can be succeeded, failed, or pending. Return server error if failure or pending.
 
     const paymentVerification = await stripe.paymentIntents.retrieve(
-      checkoutSession.payment_intent,
+      checkoutSession.payment_intent
     );
 
     if (paymentVerification.status !== "succeeded") {
@@ -244,7 +244,7 @@ router.get("/templates/:templateId", async (req, res) => {
       `https://api.lob.com/v1/templates/${templateId}`,
       {
         auth: { username: getLobApiKey() },
-      },
+      }
     );
 
     templateInfo = response.data;
@@ -274,8 +274,8 @@ router.post("/addressVerification", async (req, res) => {
     if (disallowedKeys.length > 0) {
       throw new Error(
         `Address object contained unexpected keys: ${JSON.stringify(
-          disallowedKeys,
-        )}`,
+          disallowedKeys
+        )}`
       );
     }
 
@@ -292,12 +292,12 @@ router.post("/addressVerification", async (req, res) => {
     if (zipCode) {
       if (!VALID_US_ZIP_CODE_MATCH.test(zipCode)) {
         throw new Error(
-          `Address object contained an invalid ZIP code: ${zipCode}`,
+          `Address object contained an invalid ZIP code: ${zipCode}`
         );
       }
     } else if (!((address.city || "").trim() && (address.state || "").trim())) {
       throw new Error(
-        "Address object must include both city and state, or a ZIP code",
+        "Address object must include both city and state, or a ZIP code"
       );
     }
   } catch (validationError) {
@@ -387,14 +387,14 @@ function getLobApiKey() {
     if (LOB_API_KEY) {
       console.warn('Using "LOB_API_KEY" environment variable.');
       console.warn(
-        'Please remove your deprecated "LiveLob" environment variable!',
+        'Please remove your deprecated "LiveLob" environment variable!'
       );
     } else {
       console.warn(
-        'Expected "LOB_API_KEY" environment variable was not found.',
+        'Expected "LOB_API_KEY" environment variable was not found.'
       );
       console.warn(
-        'Falling back to deprecated "LiveLob" environment variable....',
+        'Falling back to deprecated "LiveLob" environment variable....'
       );
       console.warn("Please update your environment to use the expected key!");
     }
@@ -429,7 +429,7 @@ function handleLobError(error, res) {
 
       if (process.env.NODE_ENV !== "test") {
         console.error(
-          `Lob API error (${lobStatus}): ${JSON.stringify(lobApiError)}`,
+          `Lob API error (${lobStatus}): ${JSON.stringify(lobApiError)}`
         );
       }
 

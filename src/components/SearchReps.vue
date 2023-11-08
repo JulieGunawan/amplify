@@ -208,7 +208,7 @@ export default {
   methods: {
     async loadLetterWorkflow() {
       const letterVersions = await axios.get(
-        `/api/letter_versions/${this.campaignId}`,
+        `/api/letter_versions/${this.campaignId}`
       );
       const latest =
         letterVersions.data[letterVersions.data.length - 1].template_id;
@@ -257,14 +257,14 @@ export default {
             "/api/representatives/" + this.postalCode,
             {
               params,
-            },
+            }
           );
 
           this.congressMembers = res.data;
         } else {
           this.isActive = false;
           const res = await axios.get(
-            "/api/representatives/" + this.postalCode,
+            "/api/representatives/" + this.postalCode
           );
 
           this.congressMembers = res.data;

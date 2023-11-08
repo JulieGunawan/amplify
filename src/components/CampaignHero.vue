@@ -7,7 +7,7 @@
       :style="{
         'background-color': `rgba(${hexToRgba(
           lightTheme['primary-alt'],
-          0.95,
+          0.95
         )})`,
       }"
       class="call-to-action"

@@ -9,7 +9,7 @@ module.exports = {
         .enum(
           "office_division",
           ["Federal", "State", "County", "Municipality"],
-          { useNative: true, enumName: "political_division" },
+          { useNative: true, enumName: "political_division" }
         )
         .notNullable()
         .defaultTo("Federal")

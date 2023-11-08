@@ -76,7 +76,7 @@ export default new Vuex.Store({
           resolve();
         } catch {
           const error = new Error(
-            "State cannot be retrieved from local storage.",
+            "State cannot be retrieved from local storage."
           );
           reject(error);
         }
