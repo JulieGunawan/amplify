@@ -1,0 +1,36 @@
+name: label new contributor
+on:
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+
+jobs:
+  labeler:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if user is a new contributor
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const eventType = await github.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+            const reviewers = response.data.map(r => r.user.login);
+            const author = context.payload.pull_request.user.login;
+            const isNewContributor = !reviewers.includes(author);
+            console.log('Is the author new contributor?' ${isNewContributor});
+            console.log('author: ${author}');
+            return {isNewContributor};
+
+      - name: add "new contributor" label
+        if: steps.check_contributor.outputs.isNewContributor == 'true'
+        run: |
+          echo "::add-labels::new contributor"
+        env:
+          GITHUB_TOKEN: ${{secret.GITHUB_TOKEN}}
+
+             
