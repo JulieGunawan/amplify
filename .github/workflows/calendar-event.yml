@@ -28,5 +28,5 @@ jobs:
           APP_SECRET: ${{ secrets.APP_SECRET }}
         with:
           subject: 'Review pull request'
-          body: 'A new PR has been submitted on ${{ github.repository }} from ${{ github.actor }}. Please review.'
+          body: 'A new PR has been submitted on ${{ github.repository }} from ${{ github.actor }}. Please review it.'
           emailaddress: 'yetty.gunawan@edu.sait.ca'
