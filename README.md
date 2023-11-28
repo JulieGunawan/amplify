@@ -13,6 +13,7 @@ Amplify is an open-source app created for users to take the initiative in being 
 
 This repo contains both the frontend and backend portions of the Amplify application.
 
+
 The frontend code is stored in the `src/` directory.
 
 The backend (API) code is stored in the `server/` directory.
@@ -42,7 +43,7 @@ https://user-images.githubusercontent.com/9143339/159093687-6fc90733-0599-445c-b
 <b>Codespaces Set Up</b>
 
 ## Contributing
-Would you like to become a contributor? Please check out our [contributors guide](.github/CONTRIBUTING.md)! 💝
+Would you like to become a contributor? Please check out our [contributors guide](./CONTRIBUTING.md)! 💝
 
 Run the following script first:
 ```shell
