@@ -8,38 +8,25 @@ jobs:
       contents: read
       pull-requests: write
     runs-on: ubuntu-latest
-    name: Create Event using Ms. Graph
+    name: Create Event with Ms. Graph
     steps:
       - name: Print a message if client id exist
         env:
-          clientId: ${{ secrets.CLIENT_ID }}
+          clientId: ${{ secrets.TENANT_NAME }}
         run: |
-          if [ -n "${{ secrets.CLIENT_ID }}" ] ; then
-            echo "Client ID exist and value is ${{ secrets.CLIENT_ID }}"
+          if [ -n "${{ secrets.TENANT_NAME  }}" ] ; then
+            echo "Tenant exist and value is ${{ secrets.TENANT_NAME  }}"
           else
-            echo "Client ID is not found"
+            echo "Tenant is not found"
           fi
-      - name: Print Secret Value
-        run: echo "CLIENT_ID is present"
-
-      - name: Message dump
-        run: echo '${{ toJSON(github.event) }}' | jq
-
-      - name: Checkout
-        uses: actions/checkout@v4
-
+    
       - name: Create event on the next day
-        uses: JulieGunawan/ms-graph-create-event@master
+        uses: anoopt/ms-graph-create-event@v1
         env:
-          clientId: ${{ secrets.CLIENT_ID }}
-          clientSecret: ${{ secrets.CLIENT_SECRET }}
-          tenantId: ${{ secrets.TENANT_ID }}
+          TENANT_NAME: ${{ secrets.TENANT_NAME }}
+          APP_ID: ${{ secrets.APP_ID }}
+          APP_SECRET: ${{ secrets.APP_SECRET }}
         with:
-          clientId: clientId
-          clientSecret: clientSecret
-          tenantId: tenantId
           subject: 'Review pull request'
-          body: 'Some files have been pushed on ${{ github.repository }} from ${{ github.actor }}. Please find the details here ${{ github.event.compare }}.'
-          userEmail: 'yetty.gunawan@edu.sait.ca'
-          start: '2023-11-25T14:30:00'
-          end: '2023-11-25T15:00:00'
+          body: 'A new PR has been submitted on ${{ github.repository }} from ${{ github.actor }}. Please review it.'
+          emailaddress: 'yetty.gunawan@edu.sait.ca'
