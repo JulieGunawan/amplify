@@ -1,4 +1,4 @@
-name: Create Calendar Event
+name: Create Calendar Event v2
 
 on: [push]
 
