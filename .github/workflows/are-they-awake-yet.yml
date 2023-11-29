@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: are-they-awake-yet
-      uses: hummusonrails/awake-yet-action@v1
+      uses: hummusonrails/awake-yet-action@v0.1
     env:
       GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
       GOOGLE_API_KEY: "${{ secrets.GOOGLE_API_KEY }}"
