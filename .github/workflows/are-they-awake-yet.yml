@@ -4,8 +4,8 @@ jobs:
   are-they-awake-yet:
     runs-on: ubuntu-latest
     steps:
-    - name: are-they-awake-yet
-      uses: hummusonrails/awake-yet-action@v0.1
+      - name: are-they-awake-yet
+        uses: benhayehudi/awake-yet-action@master
     env:
-      GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-      GOOGLE_API_KEY: "${{ secrets.GOOGLE_API_KEY }}"
+      GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+      GOOGLE_API_KEY: '${{ secrets.GOOGLE_API_KEY }}'
