@@ -8,8 +8,9 @@ jobs:
       - name: are-they-awake-yet
         uses: benhayehudi/awake-yet-action@master
         with:
-          entryPoint: GITHUB_TOKEN
-          args: GOOGLE_API_KEY
+          GITHUB_TOKEN: GITHUB_TOKEN
+          GOOGLE_API_KEY: GOOGLE_API_KEY
+          entryPoint: ['node', '/index.js']
     env:
       GITHUB_TOKEN: '${{ secrets.SECRET_TOKEN}}'
       GOOGLE_API_KEY: '${{ secrets.GOOGLE_API_KEY }}'
