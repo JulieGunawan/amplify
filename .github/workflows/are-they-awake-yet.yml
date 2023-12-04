@@ -1,0 +1,15 @@
+name: Are They Awake Yet
+on: push
+
+jobs:
+  are-they-awake-yet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: are-they-awake-yet
+        uses: benhayehudi/awake-yet-action@master
+        with:
+          GITHUB_TOKEN: GITHUB_TOKEN
+          GOOGLE_API_KEY: GOOGLE_API_KEY
+    env:
+      GITHUB_TOKEN: '${{ secrets.TOKEN_SECRET}}'
+      GOOGLE_API_KEY: '${{ secrets.GOOGLE_API_KEY }}'
