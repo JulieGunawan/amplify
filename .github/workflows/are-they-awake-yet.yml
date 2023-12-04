@@ -1,5 +1,6 @@
 name: Are They Awake Yet
-on: [issues, pull_request]
+on: push
+
 jobs:
   are-they-awake-yet:
     runs-on: ubuntu-latest
