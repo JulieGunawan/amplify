@@ -1,5 +1,5 @@
 name: Are They Awake Yet
-on: push
+on: [push, pull_request, issues]
 
 jobs:
   are-they-awake-yet:
