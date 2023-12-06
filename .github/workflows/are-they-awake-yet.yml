@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: are-they-awake-yet
-        uses: benhayehudi/awake-yet-action@master
+        uses: JulieGunawan/awake-yet-action@master
     env:
       GITHUB_TOKEN: ${{ secrets.SECRET_TOKEN}}
       GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
