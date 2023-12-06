@@ -21,7 +21,7 @@ jobs:
        - name: Checkout Code
          uses: actions/checkout@v2
        - name: are-they-awake-yet
-         uses: JulieGunawan/awake-yet-action@master
+         uses: benhayehudi/awake-yet-action@master
          with:
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
            
