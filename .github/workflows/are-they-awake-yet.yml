@@ -15,8 +15,11 @@ jobs:
   are-they-awake-yet:
     runs-on: ubuntu-latest
     steps:
-      - name: are-they-awake-yet
-        uses: JulieGunawan/awake-yet-action@master
+       - name: "dump github context"
+         run: echo '${{ toJSON(github.event) }}' | jq
+         shell: bash
+       - name: are-they-awake-yet
+         uses: JulieGunawan/awake-yet-action@master
     env:
       GITHUB_TOKEN: ${{ secrets.SECRET_TOKEN}}
       GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
