@@ -1,4 +1,5 @@
-name: Are They Awake Yet
+name: Are They Asleep
+
 on:
   pull_request:
     types:
@@ -9,21 +10,16 @@ on:
       - created
   issues:
     types: -opened
-
+    
 jobs:
-  are-they-awake-yet:
+  comment:
     runs-on: ubuntu-latest
-    steps:
-      - name: 'dump github context'
-        run: echo '${{ toJSON(github.event) }}' | jq
-        shell: bash
-      - name: Checkout Code
-        uses: actions/checkout@v2
-      - name: are-they-awake-yet
-        uses: benhayehudi/awake-yet-action@master
-        with:
-          GITHUB_TOKEN: ${{ secrets.SECRET_TOKEN }}
 
-    env:
-      GITHUB_TOKEN: ${{ secrets.SECRET_TOKEN}}
-      GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check if teammate is awake?
+        id: are-they-asleep
+        uses: shundor/are-they-asleep@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.SECRET_TOKEN }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}         
