@@ -1,5 +1,15 @@
 name: Are They Awake Yet
-on: [pull_request, issues]
+on: 
+  pull_request:
+    types:
+      - opened
+      - edited
+  issue_comment:
+    types:
+      - created
+  issues:
+    types:
+      -opened
 
 jobs:
   are-they-awake-yet:
