@@ -23,7 +23,7 @@ jobs:
        - name: are-they-awake-yet
          uses: benhayehudi/awake-yet-action@master
          with:
-           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+           GITHUB_TOKEN: ${{ secrets.SECRET_TOKEN }}
            
     env:
       GITHUB_TOKEN: ${{ secrets.SECRET_TOKEN}}
