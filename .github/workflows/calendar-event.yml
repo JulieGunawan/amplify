@@ -1,0 +1,32 @@
+name: Create Calendar Event v2
+
+on: [push]
+
+jobs:
+  create-event:
+    permissions:
+      contents: read
+      pull-requests: write
+    runs-on: ubuntu-latest
+    name: Create Event with Ms. Graph
+    steps:
+      - name: Print a message if client id exist
+        env:
+          clientId: ${{ secrets.TENANT_NAME }}
+        run: |
+          if [ -n "${{ secrets.TENANT_NAME  }}" ] ; then
+            echo "Tenant exist and value is ${{ secrets.TENANT_NAME  }}"
+          else
+            echo "Tenant is not found"
+          fi
+    
+      - name: Create event on the next day
+        uses: JulieGunawan/ms-graph-create-event@master
+        env:
+          TENANT_NAME: ${{ secrets.TENANT_NAME }}
+          APP_ID: ${{ secrets.APP_ID }}
+          APP_SECRET: ${{ secrets.APP_SECRET }}
+        with:
+          subject: 'Review pull request'
+          body: 'A new PR has been submitted on ${{ github.repository }} from ${{ github.actor }}. Please review it.'
+          emailaddress: 'yetty.gunawan@edu.sait.ca'
