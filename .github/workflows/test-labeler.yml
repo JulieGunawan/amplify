@@ -1,0 +1,23 @@
+name: Issue and PR Labeler test
+on:
+  issues:
+    types: [opened]
+  issue_comment:
+    types: [created, edited, deleted]
+  pull_request_target:
+    types: [opened, edited, review_requested]
+ 
+
+jobs:
+  labeler:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4 
+      - name: Label issues or comments
+        uses: actions/labeler@v5
+        with:
+            pr-number: |
+                1
+                2
+                3
